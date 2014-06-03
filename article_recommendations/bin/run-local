@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Example argument to run from S3:
+# "s3n://bucket/pageviews/YYYYMMDD/mediakey/site.com"
+
+DATA_PATH=${1:-"data"}
+
+if [[ "$DATA_PATH" == "data" ]]; then
+  INPUT_GLOB="input/*.gz"
+else
+  INPUT_GLOB="*.gz"
+fi
+
+OUTPUT_PATH=data/output
+HADOOP_CONFIG=core-site.xml
+
+rm -rf data/output data/intermediate;
+humboldt run-local --data-path=$DATA_PATH --input=$INPUT_GLOB --output=$OUTPUT_PATH --hadoop-config=$HADOOP_CONFIG

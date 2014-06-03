@@ -1,0 +1,8 @@
+data/input/*.gz
+data/output
+data/intermediate
+spec/data/output
+build
+core-site.xml
+tmp/
+/.classpath

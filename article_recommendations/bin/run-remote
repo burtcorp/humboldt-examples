@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+JOB_NAME=article_recommendations
+
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 JOB_BUCKET OUTPUT_BUCKET REMOTE_HOST S3_GLOB [SSH_KEY_PATH]"
+    exit 1
+fi
+
+job_bucket=$1
+output_bucket=$2
+remote=$3
+remote="hadoop@$remote"
+s3_glob=$4
+ssh_key_path=$5
+
+ssh_opt=""
+if [ -n $ssh_key_path ]; then
+    ssh_opt="-i $ssh_key_path"
+fi
+
+job_id="$JOB_NAME-$(date +'%Y%m%d-%H%M%S')"
+output_path="s3n://$OUTPUT_BUCKET/$job_id"
+echo "Dispatching job $job_id"
+
+humboldt package
+aws s3 cp build/$JOB_NAME.jar s3://$JOB_BUCKET/$job_id/$JOB_NAME.jar
+cat support/job_runner.sh | ssh $ssh_opt $remote "bash -s $JOB_NAME $job_id $JOB_BUCKET $s3_glob $output_path"

@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+$/ = "\0"
+
+#ARGF.set_encoding('utf-8')
+ARGF.each do |chunk|
+  chunk.split("\n").each do |line|
+    json = JSON.parse(line)
+    puts json['embed_url']
+    sorted_list = Hash[json['other_embed_url_list'].sort_by{|k,v| -v}]
+    sorted_list.each do |k, v|
+      puts "\t#{v}\t#{k}"
+    end
+  end
+end
