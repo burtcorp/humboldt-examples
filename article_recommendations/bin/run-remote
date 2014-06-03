@@ -22,9 +22,9 @@ if [ -n $ssh_key_path ]; then
 fi
 
 job_id="$JOB_NAME-$(date +'%Y%m%d-%H%M%S')"
-output_path="s3n://$OUTPUT_BUCKET/$job_id"
+output_path="s3n://$output_bucket/$job_id"
 echo "Dispatching job $job_id"
 
 humboldt package
-aws s3 cp build/$JOB_NAME.jar s3://$JOB_BUCKET/$job_id/$JOB_NAME.jar
-cat support/job_runner.sh | ssh $ssh_opt $remote "bash -s $JOB_NAME $job_id $JOB_BUCKET $s3_glob $output_path"
+aws s3 cp build/$JOB_NAME.jar s3://$job_bucket/$job_id/$JOB_NAME.jar
+cat support/job_runner.sh | ssh $ssh_opt $remote "bash -s $JOB_NAME $job_id $job_bucket $s3_glob $output_path"
